@@ -1,0 +1,465 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House Price Predictor</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    min-height: 100vh;
+    color: #f8fafc;
+    background: #08111f;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 8%;
+    border-bottom: 1px solid #233047;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    color: #38bdf8;
+}
+
+.nav-tag {
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+main {
+    max-width: 1150px;
+    margin: auto;
+    padding: 65px 22px;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 42px;
+}
+
+.badge {
+    display: inline-block;
+    color: #7dd3fc;
+    background: #102d43;
+    border: 1px solid #1e4966;
+    padding: 8px 15px;
+    border-radius: 30px;
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: clamp(34px, 5vw, 55px);
+    line-height: 1.15;
+    letter-spacing: -2px;
+}
+
+h1 span {
+    color: #38bdf8;
+}
+
+.hero p {
+    color: #94a3b8;
+    margin-top: 17px;
+    line-height: 1.7;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 25px;
+}
+
+.card {
+    background: #111d30;
+    border: 1px solid #26364e;
+    border-radius: 20px;
+    padding: 30px;
+}
+
+.card h2 {
+    font-size: 21px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #94a3b8;
+    font-size: 13px;
+    margin-bottom: 25px;
+}
+
+.fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.field label {
+    display: block;
+    color: #cbd5e1;
+    font-size: 13px;
+    margin-bottom: 9px;
+}
+
+input {
+    width: 100%;
+    background: #0b1525;
+    border: 1px solid #30415b;
+    color: white;
+    border-radius: 10px;
+    padding: 14px;
+    outline: none;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+input:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px #38bdf81c;
+}
+
+input::placeholder {
+    color: #64748b;
+}
+
+button {
+    width: 100%;
+    margin-top: 25px;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(100deg, #0284c7, #38bdf8);
+    color: #06111f;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px #0284c744;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+    transform: none;
+}
+
+.result-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
+    background:
+        radial-gradient(ellipse at top right, #164e63 0%, transparent 50%),
+        #111d30;
+}
+
+.result-label {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.price {
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    margin: 20px 0 10px;
+    overflow-wrap: anywhere;
+}
+
+.price span {
+    color: #38bdf8;
+}
+
+.result-note {
+    color: #94a3b8;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.divider {
+    height: 1px;
+    background: #2b3b50;
+    margin: 28px 0;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.stat {
+    background: #0b1525a8;
+    border: 1px solid #26364e;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.stat small {
+    color: #94a3b8;
+    display: block;
+    margin-bottom: 9px;
+}
+
+.stat strong {
+    font-size: 19px;
+}
+
+.status {
+    color: #7dd3fc;
+    font-size: 13px;
+    margin-top: 20px;
+    min-height: 20px;
+    overflow-wrap: anywhere;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+@media (max-width: 760px) {
+    nav {
+        padding: 20px;
+    }
+
+    main {
+        padding: 40px 16px;
+    }
+
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        padding: 23px;
+    }
+}
+
+@media (max-width: 380px) {
+    .fields {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">Prop<span>IQ.</span></div>
+    <div class="nav-tag">PROPERTY ESTIMATOR</div>
+</nav>
+
+<main>
+    <section class="hero">
+        <div class="badge">✦PROPERTY ESTIMATION</div>
+        <h1>Find your home's<br><span>true potential.</span></h1>
+        <p>Enter your property details and get an estimated price<br>
+        powered by a machine learning model.</p>
+    </section>
+
+    <section class="layout">
+
+        <div class="card">
+            <h2>Property Details</h2>
+            <p class="subtitle">Tell us a little about your home.</p>
+
+            <form id="houseForm">
+                <div class="fields">
+
+                    <div class="field">
+                        <label for="area">Area (sq. ft.)</label>
+                        <input id="area" type="number" min="100"
+                        max="10000" placeholder="e.g. 1500" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="bedrooms">Bedrooms</label>
+                        <input id="bedrooms" type="number" min="0"
+                        max="20" placeholder="e.g. 3" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="bathrooms">Bathrooms</label>
+                        <input id="bathrooms" type="number" min="0"
+                        max="20" placeholder="e.g. 2" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="age">Property Age (years)</label>
+                        <input id="age" type="number" min="0"
+                        max="200" placeholder="e.g. 5" required>
+                    </div>
+
+                </div>
+
+                <button id="predictBtn" type="submit">
+                    Calculate Estimated Price &nbsp; →
+                </button>
+            </form>
+
+            <div class="status" id="status"></div>
+        </div>
+
+        <div class="card result-card">
+            <div>
+                <h2>Price Estimate</h2>
+                <p class="subtitle">Your property's predicted valuation</p>
+
+                <div class="result-label">ESTIMATED PROPERTY VALUE</div>
+                <div class="price" id="price">
+                    <span>₹</span> -- 
+                </div>
+                <p class="result-note" id="note">
+                    Your estimated price will appear here after you
+                    enter your details.
+                </p>
+            </div>
+
+            <div>
+                <div class="divider"></div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <small>Floor Area</small>
+                        <strong id="showArea">--</strong>
+                    </div>
+
+                    <div class="stat">
+                        <small>Bedrooms</small>
+                        <strong id="showBeds">--</strong>
+                    </div>
+
+                    <div class="stat">
+                        <small>Bathrooms</small>
+                        <strong id="showBaths">--</strong>
+                    </div>
+
+                    <div class="stat">
+                        <small>Property Age</small>
+                        <strong id="showAge">--</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<footer>
+    EstateIQ © 2026 · Machine learning property estimation
+    <br><br>
+    Estimates are illustrative and are not official market valuations.
+</footer>
+
+<script>
+const form = document.getElementById("houseForm");
+const button = document.getElementById("predictBtn");
+
+form.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const data = {
+        area: Number(document.getElementById("area").value),
+        bedrooms: Number(document.getElementById("bedrooms").value),
+        bathrooms: Number(document.getElementById("bathrooms").value),
+        age: Number(document.getElementById("age").value)
+    };
+
+    const status = document.getElementById("status");
+    const price = document.getElementById("price");
+
+    for (const [key, value] of Object.entries(data)) {
+        if (!Number.isFinite(value)) {
+            status.textContent = "Please enter valid numbers.";
+            return;
+        }
+    }
+
+    if (data.area < 100 || data.area > 10000 ||
+        data.bedrooms < 0 || data.bedrooms > 20 ||
+        data.bathrooms < 0 || data.bathrooms > 20 ||
+        data.age < 0 || data.age > 200) {
+        status.textContent = "Please check the allowed input ranges.";
+        return;
+    }
+
+    if (data.bedrooms % 1 !== 0 ||
+        data.bathrooms % 1 !== 0 ||
+        data.age % 1 !== 0) {
+        status.textContent = "Bedrooms, bathrooms and age must be whole numbers.";
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Calculating...";
+    status.textContent = "Analyzing your property details...";
+
+    try {
+        const response = await fetch("/predict", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "Prediction failed.");
+        }
+
+        price.innerHTML = "<span>₹</span> " +
+            result.price_lakhs.toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + " L";
+
+        document.getElementById("note").textContent =
+            "Estimated at approximately ₹" +
+            (result.price_lakhs * 100000).toLocaleString("en-IN",
+            {maximumFractionDigits: 0}) +
+            ". This is a model-based estimate.";
+
+        document.getElementById("showArea").textContent =
+            data.area.toLocaleString("en-IN") + " sq. ft.";
+        document.getElementById("showBeds").textContent = data.bedrooms;
+        document.getElementById("showBaths").textContent = data.bathrooms;
+        document.getElementById("showAge").textContent = data.age + " years";
+
+        status.textContent = "✓ Prediction completed successfully.";
+
+    } catch (error) {
+        status.textContent = "Error: " + error.message;
+    } finally {
+        button.disabled = false;
+        button.textContent = "Calculate Estimated Price  →";
+    }
+});
+</script>
+
+</body>
+</html>
