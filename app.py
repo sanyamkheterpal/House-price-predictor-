@@ -21,7 +21,7 @@ for i in range(1500):
         area * 0.035
         + bedrooms * 2
         + bathrooms * 1.5
-        - age * 0.25
+        - age * 0.250
         + np.random.normal(0, 3)
     )
 
